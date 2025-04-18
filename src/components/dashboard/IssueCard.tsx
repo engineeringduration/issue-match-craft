@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { BookOpen, CircleUser, Clock, Sparkles, Star, Zap } from "lucide-react";
 import { 
@@ -17,6 +16,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { RatingStars } from "./RatingStars";
 
 export type Issue = {
   id: string;
@@ -41,7 +41,6 @@ type IssueCardProps = {
 export function IssueCard({ issue }: IssueCardProps) {
   const [expanded, setExpanded] = useState(false);
   
-  // Format the creation date to a readable format
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -53,14 +52,12 @@ export function IssueCard({ issue }: IssueCardProps) {
       : `${diffDays} days ago`;
   };
   
-  // Determine the match score class
   const getMatchScoreClass = (score: number) => {
     if (score >= 80) return "match-score-high";
     if (score >= 50) return "match-score-medium";
     return "match-score-low";
   };
   
-  // Determine the experience level text and icon
   const getExperienceLevel = (level: string) => {
     switch (level) {
       case "beginner":
@@ -75,6 +72,10 @@ export function IssueCard({ issue }: IssueCardProps) {
   };
   
   const experienceInfo = getExperienceLevel(issue.experience);
+
+  const handleRating = (issueId: string, rating: number) => {
+    console.log(`Issue ${issueId} rated ${rating} stars`);
+  };
 
   return (
     <Card className="hover-scale">
@@ -145,24 +146,31 @@ export function IssueCard({ issue }: IssueCardProps) {
         )}
       </CardContent>
       
-      <CardFooter className="flex justify-between items-center pt-2">
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-xs"
-          onClick={() => setExpanded(!expanded)}
-        >
-          {expanded ? "Hide Details" : "Why Matched?"}
-        </Button>
-        
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" className="text-xs">
-            Save
+      <CardFooter className="flex flex-col pt-2 gap-2">
+        <div className="flex justify-between items-center w-full">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-xs"
+            onClick={() => setExpanded(!expanded)}
+          >
+            {expanded ? "Hide Details" : "Why Matched?"}
           </Button>
-          <Button className="github-button text-xs" size="sm">
-            View Issue
-          </Button>
+          
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="text-xs">
+              Save
+            </Button>
+            <Button className="github-button text-xs" size="sm">
+              View Issue
+            </Button>
+          </div>
         </div>
+        
+        <RatingStars 
+          issueId={issue.id} 
+          onRate={handleRating}
+        />
       </CardFooter>
     </Card>
   );
