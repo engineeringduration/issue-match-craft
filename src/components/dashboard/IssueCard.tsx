@@ -16,7 +16,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { RatingStars } from "./RatingStars";
 
 export type Issue = {
   id: string;
@@ -72,10 +71,6 @@ export function IssueCard({ issue }: IssueCardProps) {
   };
   
   const experienceInfo = getExperienceLevel(issue.experience);
-
-  const handleRating = (issueId: string, rating: number) => {
-    console.log(`Issue ${issueId} rated ${rating} stars`);
-  };
 
   return (
     <Card className="hover-scale">
@@ -146,31 +141,24 @@ export function IssueCard({ issue }: IssueCardProps) {
         )}
       </CardContent>
       
-      <CardFooter className="flex flex-col pt-2 gap-2">
-        <div className="flex justify-between items-center w-full">
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-xs"
-            onClick={() => setExpanded(!expanded)}
-          >
-            {expanded ? "Hide Details" : "Why Matched?"}
-          </Button>
-          
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="text-xs">
-              Save
-            </Button>
-            <Button className="github-button text-xs" size="sm">
-              View Issue
-            </Button>
-          </div>
-        </div>
+      <CardFooter className="flex justify-between items-center pt-2">
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-xs"
+          onClick={() => setExpanded(!expanded)}
+        >
+          {expanded ? "Hide Details" : "Why Matched?"}
+        </Button>
         
-        <RatingStars 
-          issueId={issue.id} 
-          onRate={handleRating}
-        />
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" className="text-xs">
+            Save
+          </Button>
+          <Button className="github-button text-xs" size="sm">
+            View Issue
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );
