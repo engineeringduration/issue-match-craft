@@ -49,42 +49,52 @@ export function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
   }, [isOpen]);
   
   // Handle sending message
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+// Handle sending message with Gemini API integration
+const handleSendMessage = async () => {
+  if (!inputValue.trim()) return;
+
+  const userMessage: Message = {
+    id: Date.now().toString(),
+    content: inputValue,
+    sender: "user",
+    timestamp: new Date(),
+  };
+
+  setMessages(prev => [...prev, userMessage]);
+  setInputValue("");
+
+  try {
+    const res = await fetch("http://127.0.0.1:5000/api/gemini", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ userInput: userMessage.content }),
+    });
     
-    // Add user message
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      content: inputValue,
-      sender: "user",
+    if (!res.ok) throw new Error("Failed to fetch response");
+    
+    const data = await res.json();    
+    const botMessage: Message = {
+      id: Date.now().toString() + "-bot",
+      content: data.reply || "Sorry, I couldn't understand that.",
+      sender: "bot",
       timestamp: new Date(),
     };
-    
-    setMessages([...messages, userMessage]);
-    setInputValue("");
-    
-    // Simulate bot response after a short delay
-    setTimeout(() => {
-      const botResponses = [
-        "I found several issues that match your skills. Let's focus on JavaScript and React issues first.",
-        "Based on your experience level, you might enjoy working on these documentation issues that need attention.",
-        "Have you considered contributing to open source UI libraries? They often have good first issues.",
-        "I can help you filter for specific project sizes or technologies if you'd like.",
-        "There's a great issue about improving React hooks documentation that matches your profile!"
-      ];
-      
-      const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
-      
-      const botMessage: Message = {
-        id: Date.now().toString(),
-        content: randomResponse,
-        sender: "bot",
-        timestamp: new Date(),
-      };
-      
-      setMessages(prevMessages => [...prevMessages, botMessage]);
-    }, 1000);
-  };
+
+    setMessages(prev => [...prev, botMessage]);
+  } catch (error) {
+    console.error("Error fetching from Gemini API:", error);
+    const errorMessage: Message = {
+      id: Date.now().toString() + "-error",
+      content: "Oops! Something went wrong while getting a response.",
+      sender: "bot",
+      timestamp: new Date(),
+    };
+    setMessages(prev => [...prev, errorMessage]);
+  }
+};
+
   
   // Handle pressing Enter to send
   const handleKeyDown = (e: React.KeyboardEvent) => {

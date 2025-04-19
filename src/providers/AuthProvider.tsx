@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,7 +15,7 @@ type GithubUser = {
 };
 
 type AuthContextType = {
-  user: GithubUser | null;
+  userg: GithubUser | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   login: () => void;
@@ -39,20 +38,16 @@ const mockUser: GithubUser = {
 };
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<GithubUser | null>(null);
+  const [userg, setUserg] = useState<GithubUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Check if user is logged in on mount
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        // In a real app, you would fetch user data from your backend API
-        // For now, we'll simulate authentication with localStorage
         const storedUser = localStorage.getItem("user");
-        
         if (storedUser) {
-          setUser(JSON.parse(storedUser));
+          setUserg(JSON.parse(storedUser));
         }
       } catch (error) {
         console.error("Authentication error:", error);
@@ -66,11 +61,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = () => {
     setIsLoading(true);
-    
-    // In a real app, this would redirect to GitHub OAuth
-    // For now, we'll simulate a successful login after a short delay
     setTimeout(() => {
-      setUser(mockUser);
+      setUserg(mockUser);
       localStorage.setItem("user", JSON.stringify(mockUser));
       setIsLoading(false);
       navigate("/dashboard");
@@ -78,13 +70,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    setUser(null);
+    setUserg(null);
     localStorage.removeItem("user");
     navigate("/");
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ userg, isAuthenticated: !!userg, isLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

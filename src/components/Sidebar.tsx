@@ -1,11 +1,17 @@
+
 import { useState } from "react";
-import {
-  Github,
-  Code,
-  Layers,
-  Lightbulb,
-  Sparkles,
-  Tag
+import { Link } from "react-router-dom";
+import { 
+  Code, 
+  GitFork, 
+  Github, 
+  Layers, 
+  LayoutDashboard, 
+  Lightbulb, 
+  Sparkles, 
+  Tag, 
+  User, 
+  X 
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,6 +24,7 @@ type SidebarProps = {
   setIsOpen: (isOpen: boolean) => void;
 };
 
+// Mock data for user profile
 const mockUser = {
   name: "Jane Doe",
   username: "jane-dev",
@@ -26,11 +33,13 @@ const mockUser = {
   skills: ["JavaScript", "React", "Node.js", "TypeScript"]
 };
 
-export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
+export function Issue({ isOpen, setIsOpen }: SidebarProps) {
+  // State for filters
   const [experienceLevel, setExperienceLevel] = useState([50]);
   const [showGoodFirstIssues, setShowGoodFirstIssues] = useState(true);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>(["JavaScript", "TypeScript"]);
-
+  
+  // Toggle language selection
   const toggleLanguage = (language: string) => {
     if (selectedLanguages.includes(language)) {
       setSelectedLanguages(selectedLanguages.filter(l => l !== language));
@@ -38,26 +47,43 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
       setSelectedLanguages([...selectedLanguages, language]);
     }
   };
-
-  const languages = ["JavaScript", "TypeScript", "Python", "Rust", "Go", "Java", "C#", "PHP"];
+  
+  // Languages to filter by
+  const languages = [
+    "JavaScript", "TypeScript", "Python", "Rust", "Go", "Java", "C#", "PHP"
+  ];
 
   return (
     <>
+      {/* Sidebar backdrop for mobile */}
       {isOpen && (
-        <div
+        <div 
           className="fixed inset-0 z-40 bg-background/80 backdrop-blur-sm md:hidden"
           onClick={() => setIsOpen(false)}
         />
       )}
-
-      <aside className="w-64 border-r border-border bg-card flex flex-col h-screen sticky top-0 overflow-hidden">
-      <div className="flex flex-col h-full p-4 overflow-y-auto custom-scrollbar">
-          {/* User Profile */}
+      
+      {/* Sidebar */}
+      <aside 
+        className={`fixed inset-y-0 left-0 z-50 w-72 border-r border-border bg-card transform transition-transform duration-300 ease-in-out overflow-y-auto md:sticky md:top-16 md:h-[calc(100vh-4rem)] ${
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
+      >
+        <div className="flex flex-col h-full p-4">
+          {/* Mobile close button */}
+          <div className="flex justify-between items-center mb-4 md:hidden">
+            <h2 className="text-lg font-semibold">Filters</h2>
+            <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
+              <X className="h-5 w-5" />
+            </Button>
+          </div>
+          
+          {/* User Profile Section */}
           <div className="flex flex-col items-center py-4 space-y-2">
             <div className="relative">
-              <img
-                src={mockUser.avatarUrl}
-                alt={mockUser.name}
+              <img 
+                src={mockUser.avatarUrl} 
+                alt={mockUser.name} 
                 className="w-20 h-20 rounded-full border-2 border-border"
               />
               <div className="absolute bottom-0 right-0 w-5 h-5 rounded-full bg-green-500 border-2 border-card"></div>
@@ -75,9 +101,9 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
               ))}
             </div>
           </div>
-
+          
           <Separator className="my-4" />
-
+          
           {/* Filters */}
           <div className="space-y-5">
             <h3 className="text-sm font-medium flex items-center">
@@ -96,7 +122,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 <span>Advanced</span>
               </div>
             </div>
-
+            
             <h3 className="text-sm font-medium flex items-center mt-4">
               <Lightbulb className="h-4 w-4 mr-2 text-accent" />
               Good First Issues
@@ -108,7 +134,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 onCheckedChange={setShowGoodFirstIssues}
               />
             </div>
-
+            
             <h3 className="text-sm font-medium flex items-center mt-4">
               <Code className="h-4 w-4 mr-2 text-accent" />
               Languages
@@ -125,7 +151,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 </Badge>
               ))}
             </div>
-
+            
             <h3 className="text-sm font-medium flex items-center mt-4">
               <Layers className="h-4 w-4 mr-2 text-accent" />
               Project Size
@@ -135,7 +161,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
               <Badge variant="default" className="cursor-pointer hover:opacity-80">Medium</Badge>
               <Badge variant="outline" className="cursor-pointer hover:opacity-80">Large</Badge>
             </div>
-
+            
             <h3 className="text-sm font-medium flex items-center mt-4">
               <Tag className="h-4 w-4 mr-2 text-accent" />
               Tags
@@ -147,7 +173,7 @@ export function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
               <Badge variant="outline" className="cursor-pointer hover:opacity-80">UI/UX</Badge>
             </div>
           </div>
-
+          
           <div className="mt-auto pt-4">
             <Button className="w-full github-button">Apply Filters</Button>
           </div>

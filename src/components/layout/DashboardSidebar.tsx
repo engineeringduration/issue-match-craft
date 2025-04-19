@@ -69,6 +69,12 @@ export const DashboardSidebar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/contributions" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted/50 text-foreground/80 hover:text-foreground transition-colors">
+              <GitCommit className="h-5 w-5" />
+              <span>Recommanded Issues</span>
+            </Link>
+          </li>
+          <li>
             <Link to="/saved" className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-muted/50 text-foreground/80 hover:text-foreground transition-colors">
               <Bookmark className="h-5 w-5" />
               <span>Saved Issues</span>

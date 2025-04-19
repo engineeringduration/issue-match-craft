@@ -6,11 +6,11 @@ import { ContributionTimeline } from "@/components/contributions/ContributionTim
 import { ChatbotBubble } from "@/components/layout/ChatbotBubble";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
 export default function Contributions() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
+    <DashboardLayout>
       
       <main className="flex-1">
         {/* Header */}
@@ -159,7 +159,7 @@ export default function Contributions() {
       </main>
       
       <ChatbotBubble />
-    </div>
+    </DashboardLayout>
   );
 }
 
@@ -215,7 +215,7 @@ function LanguageBar({
         <div 
           className={`${bgColorClass} h-2 rounded-full`} 
           style={{ width: `${percentage}%` }}
-        ></div>
+          ></div>
       </div>
     </div>
   );
@@ -269,5 +269,6 @@ function ProjectItem({
         </Button>
       </div>
     </div>
+  
   );
 }

@@ -86,6 +86,24 @@
   }
 }
 
+
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  border-radius: 4px;
+  background: transparent; /* Optional: if you want it invisible */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #2dba4e48;
+  border-radius: 10px;
+}
+
+
+
 @layer base {
   * {
     @apply border-border;

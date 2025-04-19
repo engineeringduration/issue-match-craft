@@ -1,8 +1,29 @@
 
 import { Issue, IssueCard } from "@/components/dashboard/IssueCard";
 
+// I Want an api endpoint that returns a list of issues based on the user's skills and preferences
+// id: "6",
+// title: "Improve documentation for API endpoints",
+// repo: {
+//   name: "rest-api",
+//   owner: "api-platform",
+//   stars: 952,
+// },
+// tags: ["documentation", "api", "good-first-issue"],
+// matchScore: 90,
+// createdAt: "2023-04-15",
+// matchReasons: [
+//   "Documentation tasks match your preferences",
+//   "Beginner-friendly issue for this project",
+//   "Aligns with your technical writing skills",
+//   "Project in active development phase"
+// ],
+// language: "Markdown",
+// experience: "beginner",
+// },in this format
+
 // Mock data for issues
-const mockIssues: Issue[] = [
+export const mockIssues: Issue[] = [
   {
     id: "1",
     title: "Fix responsive layout in dashboard component",
