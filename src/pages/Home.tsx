@@ -1,25 +1,10 @@
-
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
+import { useAuth } from "@/providers/AuthProvider";
 import { IssueCard, type Issue } from "@/components/dashboard/IssueCard";
-import { BookOpen, GitFork, History, LogOut, MessageSquare } from "lucide-react";
+import { BookOpen, GitFork, History, MessageSquare } from "lucide-react";
 
 // Mock data - replace with real data from your API
-const mockUser = {
-  name: "Jane Doe",
-  username: "jane-dev",
-  avatarUrl: "https://github.com/ghost.png"
-};
-
 const mockIssues: Issue[] = [
   {
     id: "1",
@@ -81,59 +66,24 @@ const mockIssues: Issue[] = [
 ];
 
 export default function Home() {
-  const [issues] = useState<Issue[]>(mockIssues);
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
   
-  const handleLogout = () => {
-    // Add your logout logic here
-    navigate("/");
-  };
-
+  // Redirect to dashboard if authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+  
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-6">
-            <Link to="/" className="flex items-center gap-2">
-              <GitFork className="h-6 w-6 text-primary" />
-              <span className="font-semibold">OSContrib</span>
-            </Link>
-            
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Dashboard
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link to="/contributions" className={navigationMenuTriggerStyle()}>
-                    Contributions
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link to="/feedback" className={navigationMenuTriggerStyle()}>
-                    Feedback
-                  </Link>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={handleLogout}
-              className="flex items-center gap-2 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Logout</span>
-            </button>
-            
-            <Avatar>
-              <AvatarImage src={mockUser.avatarUrl} alt={mockUser.name} />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
+            <GitFork className="h-6 w-6 text-primary" />
+            <span className="font-semibold">OSContrib</span>
           </div>
         </div>
       </header>
@@ -142,24 +92,14 @@ export default function Home() {
       <main className="container px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Welcome back, {mockUser.name}! 👋</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Welcome back, {user?.name}! 👋</h1>
             <p className="text-muted-foreground mt-1">Here are your top matched issues for today</p>
-          </div>
-          
-          <div className="flex gap-2">
-            <Link 
-              to="/dashboard" 
-              className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium transition-colors bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
-            >
-              <BookOpen className="h-4 w-4" />
-              View All Issues
-            </Link>
           </div>
         </div>
         
         {/* Issue Grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {issues.map((issue) => (
+          {mockIssues.map((issue) => (
             <IssueCard key={issue.id} issue={issue} />
           ))}
         </div>

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -14,10 +13,11 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
-import { ChatbotBubble } from "@/components/layout/ChatbotBubble";
+import { useAuth } from "@/providers/AuthProvider";
 import { Badge } from "@/components/ui/badge";
 
 export default function Landing() {
+  const { login, isAuthenticated, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   
   return (
@@ -49,9 +49,11 @@ export default function Landing() {
                 <Button 
                   className="github-button gap-2 text-base h-12 px-6" 
                   size="lg"
+                  onClick={login}
+                  disabled={isLoading}
                 >
                   <Github className="h-5 w-5" />
-                  Sign in with GitHub
+                  {isLoading ? "Signing in..." : "Sign in with GitHub"}
                 </Button>
                 
                 <Link to="/dashboard">

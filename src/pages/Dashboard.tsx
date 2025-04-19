@@ -1,126 +1,102 @@
 
 import { useState } from "react";
-import { BellRing, Filter, GitMerge, LayoutGrid, List, SlidersHorizontal } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Navbar } from "@/components/layout/Navbar";
-import { Sidebar } from "@/components/layout/Sidebar";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { useAuth } from "@/providers/AuthProvider";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { GitCommit, GitMerge, GitPullRequest, Star } from "lucide-react";
 import { IssueGrid } from "@/components/dashboard/IssueGrid";
 import { ChatbotBubble } from "@/components/layout/ChatbotBubble";
 
+// Mock contribution data
+const contributionData = [
+  { day: '2023-01-01', count: 4 },
+  { day: '2023-01-02', count: 1 },
+  { day: '2023-01-03', count: 0 },
+  { day: '2023-01-04', count: 2 },
+  { day: '2023-01-05', count: 5 },
+  // Add more data as needed
+];
+
 export default function Dashboard() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const { user } = useAuth();
+  
+  if (!user) return null;
   
   return (
-    <div className="flex min-h-screen flex-col">
-      <Navbar />
-      
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <Sidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen} />
+    <DashboardLayout>
+      <div className="grid gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
+          <Card className="flex-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg font-medium">Profile Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">{user.bio || "No bio available"}</p>
+              
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{user.repositories}</span>
+                  <span className="text-xs text-muted-foreground">Repositories</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{user.stars}</span>
+                  <span className="text-xs text-muted-foreground">Stars</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{user.followers}</span>
+                  <span className="text-xs text-muted-foreground">Followers</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold">{user.following}</span>
+                  <span className="text-xs text-muted-foreground">Following</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         
-        {/* Main Content */}
-        <main className="flex-1">
-          {/* Search and Filters */}
-          <div className="border-b border-border/40 sticky top-16 z-30 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="container py-4 px-4 md:px-6 lg:px-8">
-              <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div className="flex w-full items-center gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="icon" 
-                    className="md:hidden"
-                    onClick={() => setSidebarOpen(true)}
-                  >
-                    <Filter className="h-4 w-4" />
-                  </Button>
-                  
-                  <div className="relative w-full max-w-md">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
-                    <Input
-                      className="w-full bg-background pl-9"
-                      placeholder="Search issues..."
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                  </div>
-                  
-                  <Button variant="outline" size="sm" className="hidden md:flex items-center gap-1">
-                    <SlidersHorizontal className="h-3.5 w-3.5" />
-                    <span>Filters</span>
-                  </Button>
-                </div>
-                
-                <div className="flex items-center gap-2 self-end md:self-auto">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                    <GitMerge className="h-3.5 w-3.5" />
-                    <span className="sr-only md:not-sr-only">Sort</span>
-                  </Button>
-                  
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
-                    <BellRing className="h-3.5 w-3.5" />
-                    <span className="sr-only md:not-sr-only">Notifications</span>
-                  </Button>
-                  
-                  <div className="border-l border-border h-6 mx-1 hidden md:block" />
-                  
-                  <div className="flex bg-muted/40 p-0.5 rounded-md">
-                    <Button
-                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                      size="sm"
-                      className="h-8 w-8"
-                      onClick={() => setViewMode('grid')}
-                    >
-                      <LayoutGrid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={viewMode === 'list' ? 'default' : 'ghost'}
-                      size="sm"
-                      className="h-8 w-8"
-                      onClick={() => setViewMode('list')}
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Issues Grid/List */}
-          <div className="container py-8 px-4 md:px-6 lg:px-8">
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-2">
-                <h1 className="text-2xl font-bold tracking-tight">
-                  Recommended Issues
-                </h1>
-                <Badge variant="outline">
-                  43 matches
-                </Badge>
-              </div>
-              <p className="text-muted-foreground">
-                Based on your skills, these issues might be a good fit for you.
-              </p>
-            </div>
-            
-            <IssueGrid />
-          </div>
-        </main>
+        {/* Activity Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Contributions</CardTitle>
+              <GitCommit className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">128</div>
+              <p className="text-xs text-muted-foreground">Contributions in the last year</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Pull Requests</CardTitle>
+              <GitPullRequest className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">24</div>
+              <p className="text-xs text-muted-foreground">Open PRs across all repositories</p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Issues</CardTitle>
+              <GitMerge className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">32</div>
+              <p className="text-xs text-muted-foreground">Issues contributed to</p>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Matched Issues Section */}
+        <div className="mt-6">
+          <h2 className="text-2xl font-bold tracking-tight mb-6">Recommended Issues for You</h2>
+          <IssueGrid />
+        </div>
       </div>
       
       <ChatbotBubble />
-    </div>
+    </DashboardLayout>
   );
 }
-
-// Components
-function Search({ className, ...props }: React.ComponentProps<typeof SlidersHorizontal>) {
-  return (
-    <SlidersHorizontal className={className} {...props} />
-  );
-}
-
-// Using the Badge component imported from ui/badge
-import { Badge } from "@/components/ui/badge";
