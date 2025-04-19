@@ -15,6 +15,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/providers/AuthProvider";
 import { Badge } from "@/components/ui/badge";
+import { ChatbotBubble } from "@/components/layout/ChatbotBubble";
 
 export default function Landing() {
   const { login, isAuthenticated, isLoading } = useAuth();
