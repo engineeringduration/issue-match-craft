@@ -5,9 +5,16 @@ import { useAuth } from "@/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "./ThemeToggle";
+import { NotificationDropdown } from "@/components/notifications/NotificationDropdown";
 
 export const DashboardHeader = () => {
   const { user } = useAuth();
+
+  // TODO: GitHub API Integration Point
+  // This component should fetch:
+  // - User profile: GET /user
+  // - User notifications: GET /notifications
+  // - Pull requests: GET /user/pulls
 
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-10">
@@ -44,9 +51,7 @@ export const DashboardHeader = () => {
           <Button variant="ghost" size="icon">
             <GitPullRequest className="h-5 w-5" />
           </Button>
-          <Button variant="ghost" size="icon">
-            <Bell className="h-5 w-5" />
-          </Button>
+          <NotificationDropdown />
           <Button variant="outline" size="sm" className="gap-2">
             <Plus className="h-4 w-4" />
             <span>New</span>
