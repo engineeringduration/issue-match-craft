@@ -40,6 +40,9 @@ export function Navbar() {
                   <Link to="/contributions" className="text-foreground/80 hover:text-foreground px-3 py-2 transition-colors">
                     Contributions
                   </Link>
+                  <Link to="/saved" className="text-foreground/80 hover:text-foreground px-3 py-2 transition-colors">
+                    Saved Issues
+                  </Link>
                 </>
               )}
             </div>
@@ -108,6 +111,12 @@ export function Navbar() {
                   onClick={() => setIsOpen(false)}
                 >
                   Contributions
+                </Link>
+                <Link to="/saved" 
+                  className="block px-3 py-2 text-foreground/80 hover:text-foreground transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Saved Issues
                 </Link>
                 <button
                   className="block w-full text-left px-3 py-2 text-foreground/80 hover:text-foreground transition-colors"

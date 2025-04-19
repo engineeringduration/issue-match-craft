@@ -11,6 +11,7 @@ import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Contributions from "./pages/Contributions";
+import SavedIssues from "./pages/SavedIssues";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/contributions" element={<Contributions />} />
+                <Route path="/saved" element={<SavedIssues />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />
