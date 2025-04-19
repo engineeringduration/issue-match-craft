@@ -12,6 +12,7 @@ import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
 import Contributions from "./pages/Contributions";
 import SavedIssues from "./pages/SavedIssues";
+import StarredRepos from "./pages/StarredRepos";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/contributions" element={<Contributions />} />
                 <Route path="/saved" element={<SavedIssues />} />
+                <Route path="/starred" element={<StarredRepos />} />
               </Route>
               
               <Route path="*" element={<NotFound />} />
