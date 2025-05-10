@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useAuth } from "@/providers/AuthProvider";
@@ -29,7 +30,7 @@ interface Repo {
 }
 
 export default function Dashboard() {
-  const { userg } = useAuth(); // From AuthProvider
+  const { user } = useAuth(); // Changed from userg to user to match AuthProvider
   const [skills, setSkills] = useState<string>("");
   const [issues, setIssues] = useState<Issue[]>([]);
   const [repos, setRepos] = useState<Repo[]>([]);
@@ -105,7 +106,7 @@ export default function Dashboard() {
     }
   };
 
-  if (!userg) return null;
+  if (!user) return null;
 
   return (
     <DashboardLayout>
@@ -116,23 +117,23 @@ export default function Dashboard() {
               <CardTitle className="text-lg font-medium">Profile Overview</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm text-muted-foreground">{userg?.bio || "No bio available"}</p>
+              <p className="text-sm text-muted-foreground">{user?.bio || "No bio available"}</p>
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4">
                 <div className="flex flex-col">
-                  <span className="text-2xl font-bold">{userg?.repositories || 0}</span>
+                  <span className="text-2xl font-bold">{user?.repositories || 0}</span>
                   <span className="text-xs text-muted-foreground">Repositories</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-bold">{userg?.stars || 0}</span>
+                  <span className="text-2xl font-bold">{user?.stars || 0}</span>
                   <span className="text-xs text-muted-foreground">Stars</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-bold">{userg?.followers || 0}</span>
+                  <span className="text-2xl font-bold">{user?.followers || 0}</span>
                   <span className="text-xs text-muted-foreground">Followers</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-bold">{userg?.following || 0}</span>
+                  <span className="text-2xl font-bold">{user?.following || 0}</span>
                   <span className="text-xs text-muted-foreground">Following</span>
                 </div>
               </div>

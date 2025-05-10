@@ -1,26 +1,4 @@
-
 import { Issue, IssueCard } from "@/components/dashboard/IssueCard";
-
-// I Want an api endpoint that returns a list of issues based on the user's skills and preferences
-// id: "6",
-// title: "Improve documentation for API endpoints",
-// repo: {
-//   name: "rest-api",
-//   owner: "api-platform",
-//   stars: 952,
-// },
-// tags: ["documentation", "api", "good-first-issue"],
-// matchScore: 90,
-// createdAt: "2023-04-15",
-// matchReasons: [
-//   "Documentation tasks match your preferences",
-//   "Beginner-friendly issue for this project",
-//   "Aligns with your technical writing skills",
-//   "Project in active development phase"
-// ],
-// language: "Markdown",
-// experience: "beginner",
-// },in this format
 
 // Mock data for issues
 export const mockIssues: Issue[] = [
@@ -144,10 +122,17 @@ export const mockIssues: Issue[] = [
   },
 ];
 
-export function IssueGrid() {
+interface IssueGridProps {
+  issues?: Issue[]; // Make the issues prop optional
+}
+
+export function IssueGrid({ issues = mockIssues }: IssueGridProps) {
+  // Use provided issues or fall back to mockIssues
+  const issuesToRender = issues || mockIssues;
+  
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {mockIssues.map((issue) => (
+      {issuesToRender.map((issue) => (
         <IssueCard key={issue.id} issue={issue} />
       ))}
     </div>

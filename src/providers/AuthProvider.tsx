@@ -18,6 +18,7 @@ type GithubUser = {
 
 type AuthContextType = {
   userg: GithubUser | null;
+  user: GithubUser | null; // Adding user property to match what components are expecting
   isAuthenticated: boolean;
   isLoading: boolean;
   login: () => void;
@@ -103,7 +104,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ userg, isAuthenticated: !!userg, isLoading, login, logout }}>
+    <AuthContext.Provider value={{ 
+      userg, 
+      user: userg, // Add user property to match what components are expecting
+      isAuthenticated: !!userg, 
+      isLoading, 
+      login, 
+      logout 
+    }}>
       {children}
     </AuthContext.Provider>
   );
