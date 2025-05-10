@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { useAuth } from "@/providers/AuthProvider";
@@ -7,20 +6,7 @@ import { GitCommit, GitMerge, GitPullRequest } from "lucide-react";
 import { IssueGrid } from "@/components/dashboard/IssueGrid";
 import { ChatbotBubble } from "@/components/layout/ChatbotBubble";
 import axios from "axios";
-
-interface Issue {
-  id: string;
-  title: string;
-  repo: {
-    name: string;
-    owner: string;
-    stars: number;
-  };
-  tags: string[];
-  matchScore: number;
-  createdAt: string;
-  language: string;
-}
+import { Issue } from "@/components/dashboard/IssueCard";
 
 interface Repo {
   id: string;
@@ -30,7 +16,7 @@ interface Repo {
 }
 
 export default function Dashboard() {
-  const { user } = useAuth(); // Changed from userg to user to match AuthProvider
+  const { user } = useAuth();
   const [skills, setSkills] = useState<string>("");
   const [issues, setIssues] = useState<Issue[]>([]);
   const [repos, setRepos] = useState<Repo[]>([]);
@@ -111,6 +97,7 @@ export default function Dashboard() {
   return (
     <DashboardLayout>
       <div className="grid gap-6">
+        {/* Profile Overview Card */}
         <div className="flex flex-col md:flex-row gap-6">
           <Card className="flex-1">
             <CardHeader className="pb-2">

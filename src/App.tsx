@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,35 +16,28 @@ import StarredRepos from "./pages/StarredRepos";
 import Home from './pages/Home';
 import Issue from "./pages/Issue";
 import NotFound from "./pages/NotFound";
-import { useState, useEffect } from 'react';
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    // Check for authentication status (e.g., via localStorage or any other method)
-    const checkAuth = () => {
-      const user = localStorage.getItem('user'); // or your custom authentication check
-      setIsAuthenticated(user !== null); // assuming 'user' means the user is authenticated
-    };
-
-    checkAuth();
-  }, []);
-
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthProvider>
-          <ThemeProvider defaultTheme="dark">
+        <ThemeProvider defaultTheme="dark">
+          <AuthProvider>
             <TooltipProvider>
               <Toaster />
               <Sonner />
               <Routes>
-                {/* Route to Home if authenticated, else redirect to Landing */}
-                <Route path="/" element={isAuthenticated ? < Dashboard  />:<Landing/>} />
+                {/* Public routes */}
                 <Route path="/landing" element={<Landing />} />
+                
+                {/* Route to handle the root - redirects to dashboard if authenticated, else to landing */}
+                <Route path="/" element={
+                  <ProtectedRoute fallback={<Landing />}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
                 
                 {/* Protected Routes */}
                 <Route element={<ProtectedRoute />}>
@@ -58,8 +52,8 @@ const App = () => {
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </TooltipProvider>
-          </ThemeProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </BrowserRouter>
     </QueryClientProvider>
   );
