@@ -1,5 +1,7 @@
+
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { GITHUB_AUTH_ENDPOINTS, USER_ENDPOINTS, apiRequest } from "@/config/api";
 
 // Define the user type
 type GithubUser = {
@@ -45,12 +47,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
+        setIsLoading(true);
+        
+        // INTEGRATION POINT: Backend API call to check if user is logged in
+        // In a real implementation, this would check with your backend
+        // const userData = await apiRequest(USER_ENDPOINTS.PROFILE);
+        // setUserg(userData);
+        
+        // For frontend development, we'll use localStorage
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
           setUserg(JSON.parse(storedUser));
         }
       } catch (error) {
         console.error("Authentication error:", error);
+        // Clear local user data if server doesn't recognize the session
+        localStorage.removeItem("user");
       } finally {
         setIsLoading(false);
       }
@@ -61,6 +73,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = () => {
     setIsLoading(true);
+    
+    // INTEGRATION POINT: Backend GitHub OAuth Flow
+    // In a real implementation, redirect to GitHub OAuth URL:
+    // window.location.href = GITHUB_AUTH_ENDPOINTS.LOGIN;
+    
+    // For frontend development, we'll simulate login with mock data
     setTimeout(() => {
       setUserg(mockUser);
       localStorage.setItem("user", JSON.stringify(mockUser));
@@ -70,6 +88,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
+    // INTEGRATION POINT: Backend Logout
+    // In a real implementation:
+    // try {
+    //   await apiRequest(GITHUB_AUTH_ENDPOINTS.LOGOUT);
+    // } catch (error) {
+    //   console.error("Logout error:", error);
+    // }
+    
+    // Clear local user data
     setUserg(null);
     localStorage.removeItem("user");
     navigate("/");

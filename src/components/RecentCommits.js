@@ -1,11 +1,24 @@
+
 import { useEffect, useState } from "react";
+import { USER_ENDPOINTS, apiRequest } from "@/config/api";
 
 const RecentCommits = () => {
   const [commits, setCommits] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:4000/api/recent-commits", {
+    // INTEGRATION POINT: Backend API call to fetch recent commits
+    // In a real implementation:
+    // apiRequest(USER_ENDPOINTS.COMMITS)
+    //   .then(data => setCommits(data))
+    //   .catch(err => {
+    //     console.error("Error fetching recent commits:", err);
+    //     setCommits([]);
+    //   })
+    //   .finally(() => setLoading(false));
+    
+    // For frontend development, we'll use direct fetch
+    fetch(USER_ENDPOINTS.COMMITS, {
       credentials: "include", // 🔐 include cookies for session-based auth
     })
       .then((res) => {

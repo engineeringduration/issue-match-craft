@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 import { Bot, Send, X, Minimize2, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import { AvatarImage } from "@/components/ui/avatar";
 import { AvatarFallback } from "@/components/ui/avatar";
+import { AI_CONFIG } from "@/config/api";
 
 type Message = {
   id: string;
@@ -48,53 +48,52 @@ export function ChatbotModal({ isOpen, onClose }: ChatbotModalProps) {
     }
   }, [isOpen]);
   
-  // Handle sending message
-// Handle sending message with Gemini API integration
-const handleSendMessage = async () => {
-  if (!inputValue.trim()) return;
+  // Handle sending message with Gemini API integration
+  const handleSendMessage = async () => {
+    if (!inputValue.trim()) return;
 
-  const userMessage: Message = {
-    id: Date.now().toString(),
-    content: inputValue,
-    sender: "user",
-    timestamp: new Date(),
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: inputValue,
+      sender: "user",
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setInputValue("");
+
+    try {
+      // Using the API config from centralized config file
+      const res = await fetch(AI_CONFIG.GEMINI_API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userInput: userMessage.content }),
+      });
+      
+      if (!res.ok) throw new Error("Failed to fetch response");
+      
+      const data = await res.json();    
+      const botMessage: Message = {
+        id: Date.now().toString() + "-bot",
+        content: data.reply || "Sorry, I couldn't understand that.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error fetching from Gemini API:", error);
+      const errorMessage: Message = {
+        id: Date.now().toString() + "-error",
+        content: "Oops! Something went wrong while getting a response.",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
   };
-
-  setMessages(prev => [...prev, userMessage]);
-  setInputValue("");
-
-  try {
-    const res = await fetch("http://127.0.0.1:5000/api/gemini", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ userInput: userMessage.content }),
-    });
-    
-    if (!res.ok) throw new Error("Failed to fetch response");
-    
-    const data = await res.json();    
-    const botMessage: Message = {
-      id: Date.now().toString() + "-bot",
-      content: data.reply || "Sorry, I couldn't understand that.",
-      sender: "bot",
-      timestamp: new Date(),
-    };
-
-    setMessages(prev => [...prev, botMessage]);
-  } catch (error) {
-    console.error("Error fetching from Gemini API:", error);
-    const errorMessage: Message = {
-      id: Date.now().toString() + "-error",
-      content: "Oops! Something went wrong while getting a response.",
-      sender: "bot",
-      timestamp: new Date(),
-    };
-    setMessages(prev => [...prev, errorMessage]);
-  }
-};
-
   
   // Handle pressing Enter to send
   const handleKeyDown = (e: React.KeyboardEvent) => {
