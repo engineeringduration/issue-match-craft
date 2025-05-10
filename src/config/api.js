@@ -45,7 +45,7 @@ export const AI_CONFIG = {
   
   // Placeholder for Gemini API key - IMPORTANT: Don't store actual API keys in frontend code
   // This should be handled by your backend service
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY || "PLACEHOLDER_API_KEY",
+  GEMINI_API_KEY: import.meta.env.VITE_GEMINI_API_KEY || "PLACEHOLDER_API_KEY",
 };
 
 /**

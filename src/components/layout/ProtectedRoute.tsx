@@ -1,8 +1,17 @@
 
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/providers/AuthProvider";
 
-export const ProtectedRoute = () => {
+interface ProtectedRouteProps {
+  children?: React.ReactNode;
+  fallback?: React.ReactNode;
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
+  children, 
+  fallback = <Navigate to="/landing" replace /> 
+}) => {
   const { isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
@@ -13,5 +22,11 @@ export const ProtectedRoute = () => {
     );
   }
 
-  return isAuthenticated ? <Outlet /> : <Navigate to="/" replace />;
+  // If authenticated, render the children or outlet
+  if (isAuthenticated) {
+    return children ? <>{children}</> : <Outlet />;
+  }
+  
+  // Not authenticated, render the fallback
+  return <>{fallback}</>;
 };
